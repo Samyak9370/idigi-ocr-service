@@ -6,7 +6,7 @@ flask-cors==5.0.0
 Pillow==11.0.0
 pytesseract==0.3.13
 pdf2image==1.17.0
-
+gunicorn
 # ── Binary dependencies (install separately) ──────────────
 #
 # 1. Tesseract OCR engine
