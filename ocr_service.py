@@ -118,7 +118,7 @@ def extract_raw_text(image: Image.Image, doc_type: str = None) -> str:
     raw = pytesseract.image_to_string(
         image,
         config=config,
-        timeout=30
+        timeout=15
     )
 
     if len(raw.strip()) < 30 and psm == 6:
