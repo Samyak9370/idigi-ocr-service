@@ -106,25 +106,31 @@ PSM_BY_DOCTYPE = {
 }
 
 def extract_raw_text(image: Image.Image, doc_type: str = None) -> str:
-    """
-    Run Tesseract OCR with the right PSM for the document type.
-    If doc_type is unknown, tries psm 6 first, falls back to psm 11.
-    """
+
     image = preprocess_image(image, doc_type)
+
+    # Prevent huge image OCR timeout
+    image.thumbnail((1200, 1200))
 
     psm = PSM_BY_DOCTYPE.get(doc_type, 6)
     config = f"--oem 3 --psm {psm} -l eng"
-    raw = pytesseract.image_to_string(image, config=config)
 
-    # If very little text was found with psm 6, retry with psm 11
+    raw = pytesseract.image_to_string(
+        image,
+        config=config,
+        timeout=30
+    )
+
     if len(raw.strip()) < 30 and psm == 6:
         config_fallback = "--oem 3 --psm 11 -l eng"
-        raw = pytesseract.image_to_string(image, config=config_fallback)
-    print("="*25," START OF RAW ", "="*25)
-    print(raw)
-    print("="*25,"  END OF RAW ", "="*25)
-    return raw.strip()
 
+        raw = pytesseract.image_to_string(
+            image,
+            config=config_fallback,
+            timeout=30
+        )
+
+    return raw.strip()
 
 # ──────────────────────────────────────────────
 # DOCUMENT TYPE DETECTION
