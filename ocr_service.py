@@ -127,7 +127,7 @@ def extract_raw_text(image: Image.Image, doc_type: str = None) -> str:
         raw = pytesseract.image_to_string(
             image,
             config=config_fallback,
-            timeout=30
+            timeout=15
         )
 
     return raw.strip()
